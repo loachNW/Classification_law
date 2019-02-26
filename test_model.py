@@ -1,7 +1,7 @@
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
-from keras.layers import Embedding, Dense, Bidirectional, Dropout, GRU,Conv1D,BatchNormalization,Activation,MaxPool1D,SimpleRNN
+from keras.layers import Embedding, Dense, Bidirectional, Dropout, CuDNNGRU,Conv1D,BatchNormalization,Activation,MaxPool1D,SimpleRNN
 from Attention import Attention
 from sklearn.externals import joblib
 
@@ -13,7 +13,7 @@ max_len =1200
 
 train_list = [i.strip() for i in open('C:/Users/ASUS/Desktop/train_test.txt', 'r', encoding='utf-8')]
 print(len(train_list))
-label_bj = [i.strip() for i in open('C:/Users/ASUS/Desktop/label_bj.txt', 'r', encoding='utf-8')]
+label_bj = [i.strip() for i in open('C:/Users/ASUS/Desktop/label_bj1.txt', 'r', encoding='utf-8')]
 # tokenizer = Tokenizer(num_words = num_words)
 # tokenizer.fit_on_texts(train_list)
 tokenizer = joblib.load('tokenizer_final.model')
@@ -29,7 +29,7 @@ model = Sequential([
     BatchNormalization(),
     Activation('relu'),
     # MaxPool1D(10),
-    Bidirectional(GRU(128, return_sequences=True,reset_after=True), merge_mode='sum'),
+    Bidirectional(CuDNNGRU(128, return_sequences=True), merge_mode='sum'),
     Attention(128),
     Dropout(0.5),
     Dense(3, activation='softmax')
@@ -46,6 +46,6 @@ pre = lb.inverse_transform(pre)
 for i in range(len(label_bj)):
     if pre[i] == label_bj[i]:
         count+=1
-print ('识别为：',count/174)
+print ('识别为：',count/881)
 pass
 

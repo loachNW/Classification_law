@@ -9,8 +9,8 @@ label = [
 print(len(label))
 
 
-tar_list = [i.strip() for i in open('C:/Users/ASUS/Desktop/train_label.txt', 'r', encoding='utf8')]#strip()方法用于移除字符串头尾指定的字符（默认为空格或换行符）或字符序列
-g = open('C:/Users/ASUS/Desktop/label_bj.txt',"w",encoding = "utf8")
+tar_list = [i.strip() for i in open('C:/Users/ASUS/Desktop/label_bj.txt', 'r', encoding='utf8')]#strip()方法用于移除字符串头尾指定的字符（默认为空格或换行符）或字符序列
+g = open('C:/Users/ASUS/Desktop/label_bj1.txt',"w",encoding = "utf8")
 tar_list_ = []
 count = 0
 for i in tar_list:

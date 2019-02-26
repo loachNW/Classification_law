@@ -17,12 +17,12 @@ myclient = pymongo.MongoClient("mongodb://intelligent:intelligent@172.16.11.199:
 mydb = myclient['operation']
 mycol = mydb['clues']
 count = 0
-f = open("C:/Users/ASUS/Desktop/train_test.txt","w",encoding = "utf8")
-g = open('C:/Users/ASUS/Desktop/train_label.txt',"w",encoding = "utf8")
+f = open('C:/Users/ASUS/Desktop/train_test.txt',"w",encoding = "utf8")
+g = open('C:/Users/ASUS/Desktop/label_bj.txt',"w",encoding = "utf8")
 
 
 
-for x in mycol.find({ 'passFlag': 1,"clue.createDate": { "$gt":1547654400000}}):
+for x in mycol.find({ 'passFlag': 1,"clue.createDate": { "$gt":1547827200000}}):
     try:
         content = x.get('clue').get('content')
         title = x.get('clue').get('caseName')

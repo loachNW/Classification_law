@@ -47,9 +47,27 @@ class Region(object):
         seg_list = jieba.lcut(line)
         sequences = self.tokenizer.texts_to_sequences([seg_list])
         data = pad_sequences(sequences, maxlen=1200)
-        pred = self.model.predict(data)
+        pred = self.model.predict_proba(data)
+        pred.tolist()
+        print(pred[0])
         pred = (pred > 0.5).astype('int32')
         return self.lb.inverse_transform(pred)
+    def prdected1(self, text):
+        resu = text.replace('|', '').replace('&nbsp;', '').replace('ldquo', '').replace('rdquo',
+                                                                                                          '').replace(
+            'lsquo', '').replace('rsquo', '').replace('“', '').replace('”', '').replace('〔', '').replace('〕', '')
+        resu = re.split(r'\s+', resu)
+        dr = re.compile(r'<[^>]+>', re.S)
+        dd = dr.sub('', ''.join(resu))
+        line = re.sub(restr, '', dd)
+        seg_list = jieba.lcut(line)
+        sequences = self.tokenizer.texts_to_sequences([seg_list])
+        data = pad_sequences(sequences, maxlen=1200)
+        pred = self.model.predict_proba(data)
+        dict = {'其他':pred[0],'环保':pred[1],'食品药品监督管理局':pred[2]}
+        # pred = (pred > 0.5).astype('int32')
+        # return self.lb.inverse_transform(pred)
+        return dict
 model_obj = Region()
 app = Flask(__name__)
 
@@ -63,3 +81,14 @@ def index():
             result = {"result":"DateType_error","status":"0"}
         return jsonify(result)
 app.run(host = "0.0.0.0", port = 5005, debug = True, use_reloader = False)
+
+@app.route("/dict",methods =["POST"])
+def index():
+    if request.method == "POST":
+        text = request.form.get("content")
+        if (text != "" and text != None):
+            result = {"result":model_obj.prdected1(text)[0],"status":"1"}
+        else:
+            result = {"result":"DateType_error","status":"0"}
+        return result
+app.run(host = "0.0.0.0", port = 5006, debug = True, use_reloader = False)
